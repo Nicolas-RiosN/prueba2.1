@@ -1,0 +1,28 @@
+.container {
+    mat-card {
+      width: 100%;
+      max-width: 600px; // Ajusta el ancho máximo según tus necesidades
+      margin: 0 auto; // Centra el card horizontalmente
+    }
+  
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px; // Espacio entre los elementos del formulario
+    }
+  
+    .full-width {
+      width: 100%;
+    }
+  
+    .button-container {
+      display: flex;
+      justify-content: flex-start;
+      gap: 16px; // Espacio entre los botones
+    }
+  
+    mat-form-field {
+      width: 100%;
+    }
+  }
+  

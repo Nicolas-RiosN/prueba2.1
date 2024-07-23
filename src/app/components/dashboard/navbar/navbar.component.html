@@ -1,0 +1,20 @@
+<div class="navbar">
+    <mat-drawer-container class="example-container"  mode="side">
+        <mat-drawer [opened]="false" #drawer class="sidenav-container" mode="push">
+          <mat-nav-list class="app-sidenav">
+            <a  mat-list-item *ngFor="let item of menu" [routerLink]="item.redirect">{{ item.nombre }}</a>
+          </mat-nav-list>
+        </mat-drawer>
+    
+        <mat-toolbar color="primary" class="app-toolbar">
+            <button (click)="drawer.toggle()" mat-icon-button class="icon-hambur" aria-label="Example icon-button with menu icon">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span class="app-tittle">ABM Estudiantes</span>
+            <span class="spacer"></span>
+            <button routerLink="/logout" mat-icon-button class="example-icon favourite-icon" aria-label="Example icon-button with heart icon">
+                <mat-icon>logout</mat-icon>
+            </button>
+        </mat-toolbar>
+    </mat-drawer-container>
+</div>

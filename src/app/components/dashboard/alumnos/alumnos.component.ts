@@ -25,7 +25,7 @@ export class AlumnosComponent {
   
   listAlumnos: Usuario[] = [];
 
-    displayedColumns: string[] = ['usuario', 'nombre', 'apellido', 'curso', 'acciones','editar'];
+    displayedColumns: string[] = ['usuario', 'nombreApellido', 'curso', 'acciones','editar'];
     dataSource!: MatTableDataSource<any>
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;

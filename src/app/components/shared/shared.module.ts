@@ -24,11 +24,14 @@ import {MatSortModule} from '@angular/material/sort';
 import {MatCardModule} from '@angular/material/card';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSelectModule} from '@angular/material/select';
+import { FullNamePipePipe } from './pipes/full-name-pipe.pipe';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    FullNamePipePipe
+  ],
   imports: [
     CommonModule,
     MatSliderModule,
@@ -72,7 +75,8 @@ import {MatSelectModule} from '@angular/material/select';
     MatSortModule,
     MatCardModule,
     MatGridListModule,
-    MatSelectModule
+    MatSelectModule,
+    FullNamePipePipe
   ]
 })
 export class SharedModule { }

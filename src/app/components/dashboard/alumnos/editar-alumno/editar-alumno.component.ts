@@ -33,7 +33,7 @@ export class EditarAlumnoComponent {
   guardarCambios() {
     if (this.form.valid) {
       const updatedUsuario: Usuario = {
-        usuario: this.data.usuario,
+        usuario: this.data.usuario,  // No se puede cambiar el usuario
         nombre: this.form.get('nombre')?.value,
         apellido: this.form.get('apellido')?.value,
         curso: this.form.get('curso')?.value

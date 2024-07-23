@@ -25,12 +25,14 @@ import {MatCardModule} from '@angular/material/card';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatSelectModule} from '@angular/material/select';
 import { FullNamePipePipe } from './pipes/full-name-pipe.pipe';
+import { FontSize20Directive } from './directives/font-size20.directive';
 
 
 
 @NgModule({
   declarations: [
-    FullNamePipePipe
+    FullNamePipePipe,
+    FontSize20Directive
   ],
   imports: [
     CommonModule,
@@ -76,7 +78,8 @@ import { FullNamePipePipe } from './pipes/full-name-pipe.pipe';
     MatCardModule,
     MatGridListModule,
     MatSelectModule,
-    FullNamePipePipe
+    FullNamePipePipe,
+    FontSize20Directive
   ]
 })
 export class SharedModule { }

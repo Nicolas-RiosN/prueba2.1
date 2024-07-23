@@ -9,6 +9,11 @@ export class UsuarioService {
   listAlumnos: Usuario[] = [
     {usuario: 'nrios', nombre: 'Nicolas', apellido: 'Rios', curso: 'Matematicas'},
     {usuario: 'karl', nombre: 'Karla', apellido: 'Contreras', curso: 'Lenguaje'},
+    {usuario: 'paulitax', nombre: 'Paulita', apellido: 'Contreras', curso: 'Historia'},
+    {usuario: 'minet', nombre: 'Minette', apellido: 'Rios', curso: 'Matematicas'},
+    {usuario: 'luks', nombre: 'Lukas', apellido: 'Contreras', curso: 'Matematicas'},
+    {usuario: 'yayox', nombre: 'Yayo', apellido: 'Contrerax', curso: 'Historia'},
+    {usuario: 'benjx', nombre: 'Benjax', apellido: 'Trerascon', curso: 'Matematicas'},
   ];
 
   constructor() { }
@@ -28,9 +33,7 @@ export class UsuarioService {
   editarUsuario(updatedUsuario: Usuario): void {
     const index = this.listAlumnos.findIndex(u => u.usuario === updatedUsuario.usuario);
     if (index !== -1) {
-      this.listAlumnos[index].nombre = updatedUsuario.nombre;
-      this.listAlumnos[index].apellido = updatedUsuario.apellido;
-      this.listAlumnos[index].curso = updatedUsuario.curso;
+      this.listAlumnos[index] = updatedUsuario;
     }
   }
 }

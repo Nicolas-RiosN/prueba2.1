@@ -55,7 +55,9 @@ import { FontSize20Directive } from './directives/font-size20.directive';
     MatSortModule,
     MatCardModule,
     MatGridListModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule,
+    
   ],
   exports:[
     MatSliderModule,
@@ -79,7 +81,8 @@ import { FontSize20Directive } from './directives/font-size20.directive';
     MatGridListModule,
     MatSelectModule,
     FullNamePipePipe,
-    FontSize20Directive
+    FontSize20Directive,
+    MatIconModule,
   ]
 })
 export class SharedModule { }

@@ -43,8 +43,8 @@
         
         <ng-container matColumnDef="editar">
           <th mat-header-cell *matHeaderCellDef appFontSize20> Editar </th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="accent" (click)="editarAlumno(element)">Editar</button>
+          <td mat-cell *matCellDef="let element; let i = index">
+            <button mat-raised-button color="accent" (click)="editarAlumno(element, i)">Editar</button>
           </td>
         </ng-container>
 

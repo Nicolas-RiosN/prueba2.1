@@ -1,0 +1,30 @@
+{
+  "alumnos": [
+    {
+      "usuario": "ehernandez",
+      "nombre": "Estebanss",
+      "apellido": "Hernandezs",
+      "curso": "Educación Física"
+    },
+    {
+      "usuario": "karlitas",
+      "nombre": "Karla",
+      "apellido": "Contreraz",
+      "curso": "Lenguaje"
+    }
+  ],
+  "login": [
+    {
+      "usuario": "nicolas",
+      "password": "123",
+      "token": "mock-token",
+      "id": "c485"
+    },
+    {
+      "usuario": "karla",
+      "password": "123",
+      "token": "mock-token",
+      "id": "c495"
+    }
+  ]
+}

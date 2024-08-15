@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { CrearAlumnoComponent } from './crear-alumno/crear-alumno.component';
 import { EditarAlumnoComponent } from './editar-alumno/editar-alumno.component';
+import { SharedModule } from '../../shared/shared.module';
 
 export interface PeriodicElement {
   name: string;
@@ -31,18 +32,28 @@ export class AlumnosComponent {
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
     
-    constructor(private _alumnoService: UsuarioService, private _snackBar: MatSnackBar, public dialog: MatDialog){
-    
+    constructor(private _alumnoService: UsuarioService, private _snackBar: MatSnackBar, public dialog: MatDialog) {
+      this.dataSource = new MatTableDataSource<Usuario>([]);
     }
 
     ngOnInit(){
       this.cargarAlumnos();
     }
 
-    cargarAlumnos(){
-      this.listAlumnos = this._alumnoService.getAlumnos();
-      this.dataSource = new MatTableDataSource(this.listAlumnos)
+    cargarAlumnos(): void {
+      this._alumnoService.getAlumnos().subscribe(
+        (alumnos: Usuario[]) => {
+          this.listAlumnos = alumnos;
+          this.dataSource = new MatTableDataSource(this.listAlumnos);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+        },
+        (error) => {
+          console.error('Error al cargar los alumnos', error);
+        }
+      );
     }
+  
 
     applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
@@ -51,30 +62,33 @@ export class AlumnosComponent {
 
 
     ngAfterViewInit() {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      if (this.dataSource) {
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      }
     }
       
-    eliminarAlumno(index: number){
-      console.log(index);
-
-      this._alumnoService.eliminarAlumnos(index);
-      this.cargarAlumnos();
-
-      this._snackBar.open('El usuario fue eliminado con exito', '',{
-        duration: 1500,
-        horizontalPosition: 'center',
-        verticalPosition:'bottom'
-      })
+    eliminarAlumno(index: number) {
+      this._alumnoService.eliminarAlumno(index).subscribe(
+        () => {
+          this.cargarAlumnos();
+          this._snackBar.open('El alumno fue eliminado con éxito', '', {
+            duration: 1500,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        },
+        (error) => console.error('Error al eliminar el alumno', error)
+      );
     }
 
-    editarAlumno(element: Usuario) {
+    editarAlumno(element: Usuario, index: number) {
       const dialogRef = this.dialog.open(EditarAlumnoComponent, {
-        width: '80%', // Ancho relativo a la pantalla
-        maxWidth: '600px', // Ancho máximo
-        minWidth: '400px', // Ancho mínimo
-        height: 'auto', // Altura automática
-        data: element
+        width: '80%',
+        maxWidth: '600px',
+        minWidth: '400px',
+        height: 'auto',
+        data: { alumno: element, index }
       });
     
       dialogRef.afterClosed().subscribe(result => {
@@ -83,4 +97,4 @@ export class AlumnosComponent {
         }
       });
     }
-}
+  }

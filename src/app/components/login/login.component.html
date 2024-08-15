@@ -1,22 +1,31 @@
 <div class="body">
-    <div class="login">
+  <div class="login">
+    <mat-spinner *ngIf="loading" class="spinner" diameter="50"></mat-spinner>
 
-        <mat-spinner *ngIf="loading" class="spinner" diameter="50"></mat-spinner>
+    <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="ingresar()">
+      <img src="/assets/img/user-interface.png" width="50%">
+      <p>Login</p>
 
-        <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="ingresar()">
-            <img src="/assets/img/user-interface.png" width="50%">
-            <p>Login</p>
-            <mat-form-field class="ancho" appearance="fill">
-                <mat-label>Usuario</mat-label>
-                <input type="text" matInput autocomplete="off" formControlName="usuario">
-            </mat-form-field>   
-            
-            <mat-form-field class="ancho" appearance="fill">
-                <mat-label>Contraseña</mat-label>
-                <input type="password" matInput autocomplete="off" formControlName="password">
-            </mat-form-field>    
-            <br>
-            <button type="submit" color="primary" class="ancho button" mat-raised-button [disabled]="form.invalid">Ingresar</button>
-        </form>
-    </div>
+      <mat-form-field class="ancho" appearance="fill">
+        <mat-label>Usuario</mat-label>
+        <input type="text" matInput autocomplete="off" formControlName="usuario">
+        <mat-error *ngIf="form.get('usuario')?.invalid && form.get('usuario')?.touched">
+          El usuario es requerido.
+        </mat-error>
+      </mat-form-field>   
+
+      <mat-form-field class="ancho" appearance="fill">
+        <mat-label>Contraseña</mat-label>
+        <input type="password" matInput autocomplete="off" formControlName="password">
+        <mat-error *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+          La contraseña es requerida.
+        </mat-error>
+      </mat-form-field>    
+
+      <br>
+      <button type="submit" color="primary" class="ancho button" mat-raised-button [disabled]="form.invalid || loading">Ingresar</button>
+
+      <div *ngIf="error" class="error">{{ error }}</div>
+    </form>
+  </div>
 </div>

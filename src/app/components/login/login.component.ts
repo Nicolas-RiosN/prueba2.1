@@ -1,55 +1,52 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  form:FormGroup;
+export class LoginComponent implements OnInit {
+  form: FormGroup;
   loading = false;
+  error: string | null = null;
 
-  constructor(private fb: FormBuilder, private _snackBar: MatSnackBar, private router: Router)
-  {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
-      usuario:['',Validators.required],
-      password:['',Validators.required]
-    })
+      usuario: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
-  ngOnInit(): void{
+  ngOnInit(): void {}
 
-  }
-
-  ingresar(){
-    const usuario = this.form.value.usuario;
-    const password = this.form.value.password;
-
-    if(usuario == 'Nicolas' && password == '123'){
-      //Redirecciono al Dashboard
-      this.fakeLoading();
-    }else{
-      //Mensaje de error
-      this.error();
-      this.form.reset();
+  ingresar(): void {
+    if (this.form.invalid) {
+      return;
     }
-  }
 
-  error(){
-    this._snackBar.open('Usuario o contraseña ingresado son invalidos', '',{
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition:'bottom'
-    })
-  }
-
-  fakeLoading(){
     this.loading = true;
-    setTimeout(() => {
-      this.router.navigate(['dashboard'])
-    }, 1500)
+    this.authService.login(this.form.value.usuario, this.form.value.password).subscribe(
+      success => {
+        if (success) {
+          this.router.navigate(['dashboard']);
+        } else {
+          this.error = 'Credenciales incorrectas';
+        }
+        this.loading = false;
+      },
+      () => {
+        this.error = 'Error al iniciar sesión';
+        this.loading = false;
+      }
+    );
   }
 }

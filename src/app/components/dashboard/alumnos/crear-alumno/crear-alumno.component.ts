@@ -1,44 +1,62 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Usuario } from '../../../../interfaces/usuario';
 import { UsuarioService } from '../../../../services/usuario.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Usuario } from '../../../../interfaces/usuario';
 
 @Component({
   selector: 'app-crear-alumno',
   templateUrl: './crear-alumno.component.html',
-  styleUrl: './crear-alumno.component.scss'
+  styleUrls: ['./crear-alumno.component.scss']
 })
 export class CrearAlumnoComponent {
 
-  curso: any[] = ['Matematica', ' Lenguaje', 'Historia', 'Hice lo que pude con el codigo']
+  curso: string[] = ['Matematica', 'Lenguaje', 'Historia', 'Hice lo que pude con el codigo'];
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private _alumnoService: UsuarioService, private router: Router, private _snackBar: MatSnackBar, private route: ActivatedRoute){
+  constructor(
+    private fb: FormBuilder,
+    private _alumnoService: UsuarioService,
+    private router: Router,
+    private _snackBar: MatSnackBar
+  ) {
     this.form = this.fb.group({
-      alumno: ['', Validators.required],
+      usuario: ['', Validators.required],
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       curso: ['', Validators.required],
-    })
+    });
   }
 
-  agregarAlumno(){
-    const alumno: Usuario = {
-      usuario: this.form.value.alumno,
-      nombre: this.form.value.nombre,
-      apellido: this.form.value.apellido,
-      curso: this.form.value.curso
-    }
-    this._alumnoService.agregarUsuario(alumno);
-    this.router.navigate(['/dashboard/alumno']);
+  agregarAlumno() {
+    if (this.form.valid) {
+      const alumno: Usuario = {
+        usuario: this.form.value.usuario,
+        nombre: this.form.value.nombre,
+        apellido: this.form.value.apellido,
+        curso: this.form.value.curso
+      };
 
-    this._snackBar.open('El Alumno fue agregado con exito', '',{
-      duration: 1500,
-      horizontalPosition: 'center',
-      verticalPosition:'bottom'
-    })
+      this._alumnoService.agregarUsuario(alumno).subscribe(
+        () => {
+          this.router.navigate(['/dashboard/alumno']);
+          this._snackBar.open('El Alumno fue agregado con éxito', '', {
+            duration: 1500,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        },
+        error => {
+          console.error('Error al agregar el alumno', error);
+          this._snackBar.open('Error al agregar el Alumno', '', {
+            duration: 1500,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom'
+          });
+        }
+      );
+    }
   }
 
   volver() {

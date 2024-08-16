@@ -1,86 +1,99 @@
-import { Component, ViewChild } from '@angular/core';
-import { Usuario } from '../../../interfaces/usuario';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { UsuarioService } from '../../../services/usuario.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { of, throwError } from 'rxjs';
+import { AlumnosComponent } from './alumnos.component';
+import { UsuarioService } from '../../../services/usuario.service';
+import { Usuario } from '../../../interfaces/usuario';
 import { EditarAlumnoComponent } from './editar-alumno/editar-alumno.component';
 
-@Component({
-  selector: 'app-alumnos',
-  templateUrl: './alumnos.component.html',
-  styleUrls: ['./alumnos.component.scss']
-})
-export class AlumnosComponent {
-  
-  listAlumnos: Usuario[] = [];
-  displayedColumns: string[] = ['usuario', 'nombreApellido', 'curso', 'acciones', 'editar'];
-  dataSource!: MatTableDataSource<Usuario>;
+describe('AlumnosComponent', () => {
+  let component: AlumnosComponent;
+  let fixture: ComponentFixture<AlumnosComponent>;
+  let mockAlumnoService: jasmine.SpyObj<UsuarioService>;
+  let snackBar: jasmine.SpyObj<MatSnackBar>;
+  let dialog: jasmine.SpyObj<MatDialog>;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  
-  constructor(private _alumnoService: UsuarioService, private _snackBar: MatSnackBar, public dialog: MatDialog) {}
+  beforeEach(async () => {
+    mockAlumnoService = jasmine.createSpyObj('UsuarioService', ['getAlumnos', 'eliminarAlumno']);
+    snackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
+    dialog = jasmine.createSpyObj('MatDialog', ['open']);
 
-  ngOnInit() {
-    this.cargarAlumnos();
-  }
+    await TestBed.configureTestingModule({
+      declarations: [ AlumnosComponent ],
+      providers: [
+        { provide: UsuarioService, useValue: mockAlumnoService },
+        { provide: MatSnackBar, useValue: snackBar },
+        { provide: MatDialog, useValue: dialog }
+      ]
+    })
+    .compileComponents();
+  });
 
-  cargarAlumnos(): void {
-    this._alumnoService.getAlumnos().subscribe(
-      (alumnos: Usuario[]) => {
-        this.listAlumnos = alumnos;
-        this.dataSource = new MatTableDataSource(this.listAlumnos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      (error) => {
-        console.error('Error al cargar los alumnos', error);
-      }
-    );
-  }
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AlumnosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 
-  eliminarAlumno(index: number) {
-    this._alumnoService.eliminarAlumno(index).subscribe(
-      () => {
-        this.cargarAlumnos(); // Actualizar la lista después de eliminar
-        this._snackBar.open('El usuario fue eliminado con éxito', '', {
-          duration: 1500,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
-      },
-      error => {
-        console.error('Error al eliminar el alumno', error);
-        this._snackBar.open('Error al eliminar el Alumno', '', {
-          duration: 1500,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom'
-        });
-      }
-    );
-  }
+  it('should load alumnos on init', () => {
+    const mockAlumnos: Usuario[] = [{ usuario: 'user1', nombre: 'John', apellido: 'Doe', curso: 'Math' }];
+    mockAlumnoService.getAlumnos.and.returnValue(of(mockAlumnos));
 
-  editarAlumno(element: Usuario, index: number) {
-    const dialogRef = this.dialog.open(EditarAlumnoComponent, {
+    component.ngOnInit();
+
+    expect(component.listAlumnos).toEqual(mockAlumnos);
+    expect(component.dataSource.data).toEqual(mockAlumnos);
+  });
+
+  it('should apply filter', () => {
+    component.dataSource = new MatTableDataSource([{ usuario: 'user1', nombre: 'John', apellido: 'Doe', curso: 'Math' }]);
+
+    const event = { target: { value: 'john' } } as unknown as Event;
+    component.applyFilter(event);
+
+    expect(component.dataSource.filter).toBe('john');
+  });
+
+  it('should call eliminarAlumno and show snackbar on success', () => {
+    mockAlumnoService.eliminarAlumno.and.returnValue(of(null));
+    spyOn(component, 'cargarAlumnos').and.callThrough();
+
+    component.eliminarAlumno(1);
+
+    expect(mockAlumnoService.eliminarAlumno).toHaveBeenCalledWith(1);
+    expect(component.cargarAlumnos).toHaveBeenCalled();
+    expect(snackBar.open).toHaveBeenCalledWith('El alumno fue eliminado con éxito', '', { duration: 1500, horizontalPosition: 'center', verticalPosition: 'bottom' });
+  });
+
+  it('should handle error in eliminarAlumno', () => {
+    mockAlumnoService.eliminarAlumno.and.returnValue(throwError('Error'));
+
+    component.eliminarAlumno(1);
+
+    expect(mockAlumnoService.eliminarAlumno).toHaveBeenCalledWith(1);
+  });
+
+  it('should call editarAlumno and open dialog', () => {
+    const mockAlumno: Usuario = { usuario: 'user1', nombre: 'John', apellido: 'Doe', curso: 'Math' };
+    const dialogRef = { afterClosed: () => of(true) };
+    dialog.open.and.returnValue(dialogRef as any);
+
+    component.editarAlumno(mockAlumno, 1);
+
+    expect(dialog.open).toHaveBeenCalledWith(EditarAlumnoComponent, {
       width: '80%',
       maxWidth: '600px',
       minWidth: '400px',
       height: 'auto',
-      data: { alumno: element, index }
+      data: { alumno: mockAlumno, index: 1 }
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.cargarAlumnos(); // Actualizar la lista después de editar
-      }
-    });
-  }
-}
+  });
+});

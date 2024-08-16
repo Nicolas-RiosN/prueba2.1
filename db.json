@@ -1,16 +1,16 @@
 {
   "alumnos": [
     {
-      "usuario": "ehernandez",
-      "nombre": "Estebanss",
-      "apellido": "Hernandezs",
-      "curso": "Educación Física"
-    },
-    {
       "usuario": "karlitas",
       "nombre": "Karla",
-      "apellido": "Contreraz",
+      "apellido": "Contreras",
       "curso": "Lenguaje"
+    },
+    {
+      "usuario": "nrios",
+      "nombre": "Nicolas",
+      "apellido": "Rios",
+      "curso": "Hice lo que pude con el codigo"
     }
   ],
   "login": [
@@ -25,6 +25,12 @@
       "password": "123",
       "token": "mock-token",
       "id": "c495"
+    },
+    {
+      "usuario": "user",
+      "password": "123",
+      "token": "mock-token",
+      "id": "c405"
     }
   ]
 }

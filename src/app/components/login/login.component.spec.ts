@@ -1,38 +1,92 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { MatToolbarModule } from '@angular/material/toolbar'; 
+import { DashboardModule } from '../dashboard/dashboard.module';
+import { AppModule } from '../../app.module';
+import { DashboardComponent } from '../dashboard/dashboard.component';
+import { Component, Renderer2 } from '@angular/core';
+import { FontSize20Directive } from '../shared/directives/font-size20.directive';
+
+@Component({
+  template: `<div appFontSize20></div>`
+})
+
+class TestComponent {}
+
+describe('FontSize20Directive', () => {
+  let fixture: ComponentFixture<TestComponent>;
+  let renderer: Renderer2;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [TestComponent, FontSize20Directive],
+      providers: [{ provide: Renderer2, useValue: jasmine.createSpyObj('Renderer2', ['setStyle']) }]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TestComponent);
+    renderer = TestBed.inject(Renderer2);
+  });
+
+  it('should call setStyle with correct parameters on initialization', () => {
+    fixture.detectChanges(); // Esto inicializa la directiva
+    expect(renderer.setStyle).toHaveBeenCalledWith(jasmine.any(Element), 'font-size', '20px');
+  });
+});
+
+class MockAuthService {
+  login(usuario: string, password: string) {
+    return of(true); // Mock successful login
+  }
+}
+
+class MockRouter {
+  navigate(path: string[]) {}
+}
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
-  let snackBar: jasmine.SpyObj<MatSnackBar>;
-  let router: jasmine.SpyObj<Router>;
+  let authService: AuthService;
+  let router: Router;
 
   beforeEach(async () => {
-    const authServiceSpy = jasmine.createSpyObj('AuthService', ['login']);
-    const snackBarSpy = jasmine.createSpyObj('MatSnackBar', ['open']);
-    const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule],
-      declarations: [LoginComponent],
+      declarations: [LoginComponent, DashboardComponent],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        MatToolbarModule,
+        DashboardModule,
+        AppModule
+      ],
       providers: [
-        { provide: AuthService, useValue: authServiceSpy },
-        { provide: MatSnackBar, useValue: snackBarSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: AuthService, useClass: MockAuthService },
+        { provide: Router, useClass: MockRouter },
       ]
-    }).compileComponents();
+    })
+    .compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService) as jasmine.SpyObj<AuthService>;
-    snackBar = TestBed.inject(MatSnackBar) as jasmine.SpyObj<MatSnackBar>;
-    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    authService = TestBed.inject(AuthService);
+    router = TestBed.inject(Router);
     fixture.detectChanges();
   });
 
@@ -40,26 +94,66 @@ describe('LoginComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call AuthService login method on submit', () => {
-    authService.login.and.returnValue(of({ token: 'mock-token' }));
+  it('should create form with empty values', () => {
+    expect(component.form.value).toEqual({ usuario: '', password: '' });
+  });
 
-    component.form.setValue({ usuario: 'test', password: 'test' });
+  it('should not call authService.login if form is invalid', () => {
+    spyOn(authService, 'login').and.callThrough();
     component.ingresar();
+    expect(authService.login).not.toHaveBeenCalled();
+  });
 
-    expect(authService.login).toHaveBeenCalledWith('test', 'test');
+  it('should call authService.login and navigate on successful login', () => {
+    spyOn(authService, 'login').and.returnValue(of(true));
+    spyOn(router, 'navigate');
+    
+    component.form.setValue({ usuario: 'test', password: 'password' });
+    component.ingresar();
+    
+    expect(authService.login).toHaveBeenCalledWith('test', 'password');
     expect(router.navigate).toHaveBeenCalledWith(['dashboard']);
   });
 
-  it('should show error message on login failure', () => {
-    authService.login.and.returnValue(throwError(() => new Error('Login failed')));
-
-    component.form.setValue({ usuario: 'test', password: 'test' });
+  it('should set error message on failed login', () => {
+    spyOn(authService, 'login').and.returnValue(of(false));
+    
+    component.form.setValue({ usuario: 'test', password: 'password' });
     component.ingresar();
+    
+    expect(component.error).toBe('Credenciales incorrectas');
+  });
 
-    expect(snackBar.open).toHaveBeenCalledWith('Usuario o contraseña ingresado son invalidos', '', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+  it('should set error message on login error', () => {
+    spyOn(authService, 'login').and.returnValue(throwError(() => new Error('Error')));
+    
+    component.form.setValue({ usuario: 'test', password: 'password' });
+    component.ingresar();
+    
+    expect(component.error).toBe('Error al iniciar sesión');
+  });
+
+  it('should show spinner when loading', () => {
+    component.loading = true;
+    fixture.detectChanges();
+    
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
+    expect(spinner).toBeTruthy();
+  });
+
+  it('should hide spinner when not loading', () => {
+    component.loading = false;
+    fixture.detectChanges();
+    
+    const spinner = fixture.nativeElement.querySelector('mat-spinner');
+    expect(spinner).toBeFalsy();
+  });
+
+  it('should disable submit button when form is invalid', () => {
+    component.form.setValue({ usuario: '', password: '' });
+    fixture.detectChanges();
+    
+    const button = fixture.nativeElement.querySelector('button');
+    expect(button.disabled).toBeTrue();
   });
 });

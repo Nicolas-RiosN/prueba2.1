@@ -8,9 +8,9 @@
     },
     {
       "usuario": "nrios",
-      "nombre": "Nicolas",
-      "apellido": "Rios",
-      "curso": "Hice lo que pude con el codigo"
+      "nombre": "Nicolás",
+      "apellido": "Ríos",
+      "curso": "Historia"
     }
   ],
   "login": [
@@ -31,6 +31,13 @@
       "password": "123",
       "token": "mock-token",
       "id": "c405"
+    }
+  ],
+  "cursos": [
+    {
+      "nombreCurso": "Matematicass",
+      "cupos": "2032",
+      "fechaTermino": "2024-08-22T04:00:00.000Z"
     }
   ]
 }

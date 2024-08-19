@@ -141,3 +141,81 @@ app.post('/alumnos', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+
+// Endpoint para obtener cursos
+app.get('/cursos', (req, res) => {
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  res.json(db.cursos || []);
+});
+
+// Endpoint para agregar un curso
+app.post('/cursos', (req, res) => {
+  const newCurso = req.body;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  if (!newCurso || !newCurso.nombreCurso || !newCurso.cupos || !newCurso.fechaTermino) {
+    return res.status(400).json({ error: 'Datos de curso incompletos' });
+  }
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  db.cursos.push(newCurso);
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+  res.status(201).json({ message: 'Curso agregado con éxito' });
+});
+
+// Endpoint para eliminar un curso
+app.delete('/cursos/:index', (req, res) => {
+  const { index } = req.params;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  if (db.cursos[index]) {
+    db.cursos.splice(index, 1);
+    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+    res.status(200).json({ message: 'Curso eliminado con éxito' });
+  } else {
+    res.status(404).json({ error: 'Curso no encontrado' });
+  }
+});
+
+// Endpoint para actualizar un curso
+app.put('/cursos/:index', (req, res) => {
+  const { index } = req.params;
+  const updatedCurso = req.body;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  if (db.cursos[index]) {
+    db.cursos[index] = updatedCurso;
+    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+    res.status(200).json({ message: 'Curso actualizado con éxito' });
+  } else {
+    res.status(404).json({ error: 'Curso no encontrado' });
+  }
+});

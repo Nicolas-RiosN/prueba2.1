@@ -15,12 +15,15 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatDrawer, MatDrawerContainer } from '@angular/material/sidenav';
 import { MatNavList } from '@angular/material/list';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatOption, MatOptionModule } from '@angular/material/core';
+import { MatNativeDateModule, MatOption, MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridList, MatGridTile } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 
 @NgModule({
@@ -53,7 +56,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatGridList,
     MatGridTile,
     MatPaginatorModule,
-    SharedModule
+    SharedModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   exports: [
     DashboardComponent // Exporta si es necesario

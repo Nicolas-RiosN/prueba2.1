@@ -4,8 +4,7 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from '../services/auth.service';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Importa aquí
-import { FormsModule } from '@angular/forms'; // Agrega otros módulos necesarios
+
 
 describe('AuthGuard', () => {
   let guard: AuthGuard;

@@ -1,5 +1,92 @@
 <div class="container">
-    <mat-toolbar>
-        <span>Reportes</span>
+    <mat-toolbar color="primary">
+      <span>Cursos</span>
     </mat-toolbar>
-</div>
+  
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Agregar Curso</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="agregarCurso()" class="curso-form">
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre del Curso</mat-label>
+            <input matInput [(ngModel)]="nuevoCurso.nombreCurso" name="nombreCurso" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Cupos</mat-label>
+            <input matInput type="number" [(ngModel)]="nuevoCurso.cupos" name="cupos" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha de Término</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="nuevoCurso.fechaTermino" name="fechaTermino" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">Agregar Curso</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  
+    <mat-card class="list-card">
+      <mat-card-header>
+        <mat-card-title>Lista de Cursos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="cursos" class="mat-elevation-z8">
+          <ng-container matColumnDef="nombreCurso">
+            <mat-header-cell *matHeaderCellDef> Nombre del Curso </mat-header-cell>
+            <mat-cell *matCellDef="let curso"> {{curso.nombreCurso}} </mat-cell>
+          </ng-container>
+  
+          <ng-container matColumnDef="cupos">
+            <mat-header-cell *matHeaderCellDef> Cupos </mat-header-cell>
+            <mat-cell *matCellDef="let curso"> {{curso.cupos}} </mat-cell>
+          </ng-container>
+  
+          <ng-container matColumnDef="fechaTermino">
+            <mat-header-cell *matHeaderCellDef> Fecha de Término </mat-header-cell>
+            <mat-cell *matCellDef="let curso"> {{curso.fechaTermino | date:'dd/MM/yyyy'}} </mat-cell>
+          </ng-container>
+  
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+            <mat-cell *matCellDef="let curso; let i = index">
+              <button mat-raised-button color="primary" (click)="iniciarEdicion(curso, i)">Editar</button>
+              <button mat-button color="warn" (click)="eliminarCurso(i)">Eliminar</button>
+            </mat-cell>
+          </ng-container>
+  
+          <mat-header-row *matHeaderRowDef="['nombreCurso', 'cupos', 'fechaTermino', 'actions']"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ['nombreCurso', 'cupos', 'fechaTermino', 'actions']"></mat-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  
+    <mat-card *ngIf="cursoAEditar" class="edit-card">
+      <mat-card-header>
+        <mat-card-title>Editar Curso</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="actualizarCurso()" class="curso-form">
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre del Curso</mat-label>
+            <input matInput [(ngModel)]="cursoEditado.nombreCurso" name="nombreCurso" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Cupos</mat-label>
+            <input matInput type="number" [(ngModel)]="cursoEditado.cupos" name="cupos" required>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Fecha de Término</mat-label>
+            <input matInput [matDatepicker]="pickerEdit" [(ngModel)]="cursoEditado.fechaTermino" name="fechaTermino" required>
+            <mat-datepicker-toggle matSuffix [for]="pickerEdit"></mat-datepicker-toggle>
+            <mat-datepicker #pickerEdit></mat-datepicker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit">Actualizar</button>
+          <button mat-button color="warn" (click)="cursoAEditar = null">Cancelar</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  

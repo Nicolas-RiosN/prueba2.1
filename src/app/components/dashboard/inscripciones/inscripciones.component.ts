@@ -9,6 +9,12 @@ import { Curso } from '../../../interfaces/curso';
 import { Usuario } from '../../../interfaces/usuario';
 import { InscripcionesListComponent } from './inscripciones-list/inscripciones-list.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { Inscripcion } from '../../../interfaces/inscripcion';
+import { select, Store } from '@ngrx/store';
+import { AppState } from '../../../state/app.state';
+import { eliminarInscripcion, inscribir, loadCursos, loadUsuarios } from '../../../state/inscripciones.actions';
+import { selectCursos, selectError, selectLoading, selectUsuarios } from '../../../state/inscripciones.selectors';
 
 
 @Component({
@@ -18,31 +24,47 @@ import { MatDialog } from '@angular/material/dialog';
 })
 
 export class InscripcionesComponent implements OnInit {
-  usuarios: Usuario[] = [];
-  cursos: Curso[] = [];
+  usuarios$: Observable<Usuario[]>;
+  cursos$: Observable<Curso[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<any>;
+
   usuarioSeleccionado: Usuario | null = null;
   cursoSeleccionado: Curso | null = null;
 
-  constructor(private inscripcionesService: InscripcionesService, private snackBar: MatSnackBar, private dialog: MatDialog) {}
+  constructor(
+    private store: Store<AppState>,
+    private inscripcionesService: InscripcionesService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {
+    this.usuarios$ = this.store.pipe(select(selectUsuarios));
+    this.cursos$ = this.store.pipe(select(selectCursos));
+    this.loading$ = this.store.pipe(select(selectLoading));
+    this.error$ = this.store.pipe(select(selectError));
+  }
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.store.dispatch(loadUsuarios());
+    this.store.dispatch(loadCursos());
+
+    this.error$.subscribe(error => {
+      if (error) {
+        this.snackBar.open(`Error: ${error.message}`, 'Cerrar', {
+          duration: 3000
+        });
+      }
+    });
+
+    this.loading$.subscribe(loading => {
+      if (!loading) {
+        this.snackBar.open('Operación completada', 'Cerrar', {
+          duration: 3000
+        });
+      }
+    });
   }
 
-  cargarDatos(): void {
-    this.inscripcionesService.getUsuarios().subscribe(
-      (data: Usuario[]) => {
-        console.log('Usuarios cargados:', data);
-        this.usuarios = data;
-      },
-      (error: HttpErrorResponse) => this.showError('Error al cargar usuarios: ' + error.message)
-    );
-    this.inscripcionesService.getCursos().subscribe(
-      (data: Curso[]) => this.cursos = data,
-      (error: HttpErrorResponse) => this.showError('Error al cargar cursos: ' + error.message)
-    );
-  }
-  
   onUsuarioSeleccionado(usuario: Usuario): void {
     this.usuarioSeleccionado = usuario;
   }
@@ -51,46 +73,40 @@ export class InscripcionesComponent implements OnInit {
     this.cursoSeleccionado = curso;
   }
 
-  inscribir(): void {
-    if (this.usuarioSeleccionado && this.cursoSeleccionado) {
-      this.inscripcionesService.inscribir(this.usuarioSeleccionado, this.cursoSeleccionado).subscribe(
-        () => this.showSuccess('Inscripción realizada con éxito.'),
-        (error: HttpErrorResponse) => this.showError('Error al realizar la inscripción: ' + error.message)
-      );
-    } else {
-      this.showError('Seleccione un usuario y un curso.');
-    }
+// inscripciones.component.ts
+inscribir(): void {
+  if (this.usuarioSeleccionado && this.cursoSeleccionado) {
+    this.store.dispatch(inscribir({ usuario: this.usuarioSeleccionado, curso: this.cursoSeleccionado }));
   }
+}
 
-  eliminarCurso(): void {
-    if (this.usuarioSeleccionado && this.cursoSeleccionado) {
-      this.inscripcionesService.eliminarCurso(this.usuarioSeleccionado, this.cursoSeleccionado).subscribe(
-        () => this.showSuccess('Inscripción eliminada con éxito.'),
-        (error: HttpErrorResponse) => this.showError('Error al eliminar la inscripción: ' + error.message)
-      );
-    } else {
-      this.showError('Seleccione un usuario y un curso.');
-    }
+eliminarInscripcion(): void {
+  if (this.usuarioSeleccionado && this.cursoSeleccionado) {
+    this.inscripcionesService.eliminarInscripcion(this.usuarioSeleccionado, this.cursoSeleccionado).subscribe(
+      response => {
+        console.log('Inscripción eliminada con éxito:', response);
+        this.snackBar.open('Inscripción eliminada con éxito', 'Cerrar', {
+          duration: 3000
+        });
+      },
+      error => {
+        console.error('Error al eliminar la inscripción:', error);
+        this.snackBar.open(`Error: ${error.message}`, 'Cerrar', {
+          duration: 3000
+        });
+      }
+    );
+  } else {
+    this.snackBar.open('Selecciona un usuario y un curso', 'Cerrar', {
+      duration: 3000
+    });
   }
-  
+}
+
   openInscripcionesList(): void {
     this.dialog.open(InscripcionesListComponent, {
       width: '600px',
-      data: {}
-    });
-  }
-
-  private showSuccess(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
-      panelClass: ['success-snackbar']
-    });
-  }
-
-  private showError(message: string): void {
-    this.snackBar.open(message, 'Cerrar', {
-      duration: 3000,
-      panelClass: ['error-snackbar']
+      data: {} // Puedes pasar datos al componente del diálogo si es necesario
     });
   }
 }

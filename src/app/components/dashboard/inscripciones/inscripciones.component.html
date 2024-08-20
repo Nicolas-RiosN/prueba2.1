@@ -1,44 +1,40 @@
-<div>
-  <!-- Combobox para seleccionar usuario -->
-  <mat-form-field appearance="fill">
-    <mat-label>Selecciona un Usuario</mat-label>
-    <mat-select (selectionChange)="onUsuarioSeleccionado($event.value)">
-      <mat-option *ngFor="let usuario of usuarios" [value]="usuario">
-        {{ usuario.nombre }} {{ usuario.apellido }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+<!-- Combobox para seleccionar usuario -->
+<mat-form-field appearance="fill">
+  <mat-label>Selecciona un Usuario</mat-label>
+  <mat-select (selectionChange)="onUsuarioSeleccionado($event.value)">
+    <mat-option *ngFor="let usuario of (usuarios$ | async)" [value]="usuario">
+      {{ usuario.nombre }} {{ usuario.apellido }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
-  <!-- Mostrar información del usuario seleccionado -->
-  <div *ngIf="usuarioSeleccionado">
-    <h3>Información del Usuario Seleccionado:</h3>
-    <p><strong>Usuario:</strong> {{ usuarioSeleccionado.usuario }}</p>
-    <p><strong>Nombre:</strong> {{ usuarioSeleccionado.nombre }}</p>
-    <p><strong>Apellido:</strong> {{ usuarioSeleccionado.apellido }}</p>
-  </div>
-
-  <!-- Combobox para seleccionar curso -->
-  <mat-form-field appearance="fill">
-    <mat-label>Selecciona un Curso</mat-label>
-    <mat-select (selectionChange)="onCursoSeleccionado($event.value)">
-      <mat-option *ngFor="let curso of cursos" [value]="curso">
-        {{ curso.nombreCurso }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Mostrar información del curso seleccionado -->
-  <div *ngIf="cursoSeleccionado">
-    <h3>Información del Curso Seleccionado:</h3>
-    <p><strong>Nombre del Curso:</strong> {{ cursoSeleccionado.nombreCurso }}</p>
-    <p><strong>Cupos:</strong> {{ cursoSeleccionado.cupos }}</p>
-    <p><strong>Fecha de Término:</strong> {{ cursoSeleccionado.fechaTermino | date }}</p>
-  </div>
-
-  <!-- Botones para acciones -->
-  <button mat-raised-button color="primary" (click)="inscribir()">Inscribir</button>
-  <button mat-raised-button color="warn" (click)="eliminarCurso()">Eliminar Curso</button>
-  <!-- en tu componente principal -->
-<button mat-raised-button color="primary" (click)="openInscripcionesList()">Ver Inscripciones</button>
-
+<!-- Mostrar información del usuario seleccionado -->
+<div *ngIf="usuarioSeleccionado">
+  <h3>Información del Usuario Seleccionado:</h3>
+  <p><strong>Usuario:</strong> {{ usuarioSeleccionado.usuario }}</p>
+  <p><strong>Nombre:</strong> {{ usuarioSeleccionado.nombre }}</p>
+  <p><strong>Apellido:</strong> {{ usuarioSeleccionado.apellido }}</p>
 </div>
+
+<!-- Combobox para seleccionar curso -->
+<mat-form-field appearance="fill">
+  <mat-label>Selecciona un Curso</mat-label>
+  <mat-select (selectionChange)="onCursoSeleccionado($event.value)">
+    <mat-option *ngFor="let curso of (cursos$ | async)" [value]="curso">
+      {{ curso.nombreCurso }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- Mostrar información del curso seleccionado -->
+<div *ngIf="cursoSeleccionado">
+  <h3>Información del Curso Seleccionado:</h3>
+  <p><strong>Nombre del Curso:</strong> {{ cursoSeleccionado.nombreCurso }}</p>
+  <p><strong>Cupos:</strong> {{ cursoSeleccionado.cupos }}</p>
+  <p><strong>Fecha de Término:</strong> {{ cursoSeleccionado.fechaTermino | date }}</p>
+</div>
+
+<!-- Botones para acciones -->
+<button mat-raised-button color="primary" (click)="inscribir()">Inscribir</button>
+<button mat-raised-button color="warn" (click)="eliminarInscripcion()">Eliminar Curso</button>
+<button mat-raised-button color="primary" (click)="openInscripcionesList()">Ver Inscripciones</button>

@@ -31,7 +31,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 
 
-
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -41,8 +40,8 @@ import { MatDialog } from '@angular/material/dialog';
     CrearAlumnoComponent,
     EditarAlumnoComponent,
     NavbarComponent,
-    InscripcionesComponent,
     InscripcionesListComponent,
+    InscripcionesComponent
   ],
   imports: [
     CommonModule,

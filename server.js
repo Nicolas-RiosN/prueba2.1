@@ -306,3 +306,30 @@ app.get('/usuarios', (req, res) => {
     res.status(404).json({ error: 'No se encontraron alumnos' });
   }
 });
+
+app.delete('/inscripciones', (req, res) => {
+  const { usuario, curso } = req.body;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  if (!usuario || !curso) {
+    return res.status(400).json({ error: 'Datos de inscripción incompletos' });
+  }
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  // Encuentra el índice de la inscripción que coincide con usuario y curso
+  const index = db.inscripciones.findIndex(i => i.usuario.usuario === usuario.usuario && i.curso.nombreCurso === curso.nombreCurso);
+
+  if (index !== -1) {
+    db.inscripciones.splice(index, 1);
+    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+    res.status(200).json({ message: 'Inscripción eliminada con éxito' });
+  } else {
+    res.status(404).json({ error: 'Inscripción no encontrada para el usuario en el curso especificado' });
+  }
+});

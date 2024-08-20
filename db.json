@@ -11,6 +11,12 @@
       "nombre": "Nicolás",
       "apellido": "Ríos",
       "curso": "Historia"
+    },
+    {
+      "usuario": "veronic",
+      "nombre": "Veronica",
+      "apellido": "Ríos",
+      "curso": "Matematica"
     }
   ],
   "login": [
@@ -43,6 +49,16 @@
       "nombreCurso": "Lenguaje",
       "cupos": 10,
       "fechaTermino": "2024-08-31T04:00:00.000Z"
+    },
+    {
+      "nombreCurso": "Historia",
+      "cupos": 20,
+      "fechaTermino": "2024-08-31T04:00:00.000Z"
+    },
+    {
+      "nombreCurso": "Algebra I",
+      "cupos": 10,
+      "fechaTermino": "2024-12-19T03:00:00.000Z"
     }
   ],
   "inscripciones": [
@@ -74,32 +90,6 @@
     },
     {
       "usuario": {
-        "usuario": "karlitas",
-        "nombre": "Karlas",
-        "apellido": "Contreras",
-        "curso": "Lenguaje"
-      },
-      "curso": {
-        "nombreCurso": "Lenguaje",
-        "cupos": 10,
-        "fechaTermino": "2024-08-31T04:00:00.000Z"
-      }
-    },
-    {
-      "usuario": {
-        "usuario": "karlitas",
-        "nombre": "Karlas",
-        "apellido": "Contreras",
-        "curso": "Lenguaje"
-      },
-      "curso": {
-        "nombreCurso": "Lenguaje",
-        "cupos": 10,
-        "fechaTermino": "2024-08-31T04:00:00.000Z"
-      }
-    },
-    {
-      "usuario": {
         "usuario": "nrios",
         "nombre": "Nicolás",
         "apellido": "Ríos",
@@ -113,10 +103,49 @@
     },
     {
       "usuario": {
+        "usuario": "karlitas",
+        "nombre": "Karlas",
+        "apellido": "Contreras",
+        "curso": "Lenguaje"
+      },
+      "curso": {
+        "nombreCurso": "Historia",
+        "cupos": 20,
+        "fechaTermino": "2024-08-31T04:00:00.000Z"
+      }
+    },
+    {
+      "usuario": {
         "usuario": "nrios",
         "nombre": "Nicolás",
         "apellido": "Ríos",
         "curso": "Historia"
+      },
+      "curso": {
+        "nombreCurso": "Matematicas",
+        "cupos": "2032",
+        "fechaTermino": "2024-08-22T04:00:00.000Z"
+      }
+    },
+    {
+      "usuario": {
+        "usuario": "karlitas",
+        "nombre": "Karlas",
+        "apellido": "Contreras",
+        "curso": "Lenguaje"
+      },
+      "curso": {
+        "nombreCurso": "Matematicas",
+        "cupos": "2032",
+        "fechaTermino": "2024-08-22T04:00:00.000Z"
+      }
+    },
+    {
+      "usuario": {
+        "usuario": "karlitas",
+        "nombre": "Karlas",
+        "apellido": "Contreras",
+        "curso": "Lenguaje"
       },
       "curso": {
         "nombreCurso": "Lenguaje",

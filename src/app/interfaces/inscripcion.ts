@@ -1,4 +1,3 @@
-// inscripcion.model.ts
 import { Usuario } from './usuario';
 import { Curso } from './curso';
 

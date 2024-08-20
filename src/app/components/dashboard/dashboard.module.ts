@@ -24,6 +24,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput, MatInputModule } from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import { InscripcionesComponent } from './inscripciones/inscripciones.component';
+import { InscripcionesListComponent } from './inscripciones/inscripciones-list/inscripciones-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+
 
 
 @NgModule({
@@ -35,6 +41,8 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     CrearAlumnoComponent,
     EditarAlumnoComponent,
     NavbarComponent,
+    InscripcionesComponent,
+    InscripcionesListComponent,
   ],
   imports: [
     CommonModule,
@@ -60,10 +68,12 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
     MatFormFieldModule,
     MatInputModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatDialogModule,
+    MatTableModule,
   ],
   exports: [
-    DashboardComponent // Exporta si es necesario
+    DashboardComponent 
   ]
 })
 export class DashboardModule { }

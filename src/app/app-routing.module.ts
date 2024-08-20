@@ -12,7 +12,6 @@ const routes: Routes = [
     canActivate: [AuthGuard] 
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  // otras rutas
 ];
 
 @NgModule({

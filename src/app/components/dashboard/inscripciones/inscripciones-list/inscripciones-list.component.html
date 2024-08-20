@@ -1,0 +1,23 @@
+<!-- inscripciones-list.component.html -->
+<table mat-table [dataSource]="inscripciones" class="mat-elevation-z8">
+
+    <!-- Usuario Column -->
+    <ng-container matColumnDef="usuario">
+      <th mat-header-cell *matHeaderCellDef> Usuario </th>
+      <td mat-cell *matCellDef="let inscripcion">
+        {{ inscripcion.usuario.nombre }} {{ inscripcion.usuario.apellido }}
+      </td>
+    </ng-container>
+  
+    <!-- Curso Column -->
+    <ng-container matColumnDef="curso">
+      <th mat-header-cell *matHeaderCellDef> Curso </th>
+      <td mat-cell *matCellDef="let inscripcion">
+        {{ inscripcion.curso.nombreCurso }}
+      </td>
+    </ng-container>
+  
+    <tr mat-header-row *matHeaderRowDef="['usuario', 'curso']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['usuario', 'curso'];"></tr>
+  </table>
+  

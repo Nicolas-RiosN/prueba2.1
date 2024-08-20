@@ -1,0 +1,43 @@
+/* styles.scss */
+.success-snackbar {
+    background-color: #4caf50; /* Verde para éxito */
+    color: white;
+  }
+  
+  .error-snackbar {
+    background-color: #f44336; /* Rojo para error */
+    color: white;
+  }  
+  
+ /* inscripciones.component.scss */
+.inscripciones-card {
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  
+  .actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  mat-card-subtitle {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  mat-card-subtitle h3 {
+    margin-top: 0;
+  }
+  
+  mat-card-subtitle p {
+    margin: 0;
+  }
+  

@@ -8,6 +8,7 @@ import { CrearAlumnoComponent } from './alumnos/crear-alumno/crear-alumno.compon
 import { EditarAlumnoComponent } from './alumnos/editar-alumno/editar-alumno.component';
 import { LoginComponent } from '../login/login.component';
 import { AuthGuard } from '../../guards/auth.guard';
+import { InscripcionesComponent } from './inscripciones/inscripciones.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, children: [
@@ -15,7 +16,8 @@ const routes: Routes = [
     { path: 'alumno', component: AlumnosComponent },
     { path: 'reportes', component: ReportesComponent },
     { path: 'crear-alumno', component: CrearAlumnoComponent },
-    { path: 'editar-alumno', component: EditarAlumnoComponent }
+    { path: 'editar-alumno', component: EditarAlumnoComponent },
+    { path: 'inscripciones', component: InscripcionesComponent },
   ] }
 ];
 

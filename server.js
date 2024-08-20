@@ -7,6 +7,9 @@ const path = require('path');
 const app = express();
 const port = 3001;
 
+// Middleware para manejar JSON
+app.use(express.json());
+
 // Configura CORS
 app.use(cors()); // Permite todas las solicitudes de cualquier origen
 
@@ -217,5 +220,89 @@ app.put('/cursos/:index', (req, res) => {
     res.status(200).json({ message: 'Curso actualizado con éxito' });
   } else {
     res.status(404).json({ error: 'Curso no encontrado' });
+  }
+});
+
+// Endpoint para obtener todas las inscripciones
+app.get('/inscripciones', (req, res) => {
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  res.json(db.inscripciones || []);
+});
+
+
+// Endpoint para agregar una inscripción
+app.post('/inscripciones', (req, res) => {
+  const nuevaInscripcion = req.body;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  if (!nuevaInscripcion || !nuevaInscripcion.usuario || !nuevaInscripcion.curso) {
+    return res.status(400).json({ error: 'Datos de inscripción incompletos' });
+  }
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  db.inscripciones.push(nuevaInscripcion);
+  fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+  res.status(201).json({ message: 'Inscripción realizada con éxito' });
+});
+
+// Endpoint para eliminar una inscripción
+app.delete('/inscripciones', (req, res) => {
+  const { usuario, curso } = req.body;
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  if (!usuario || !curso) {
+    return res.status(400).json({ error: 'Datos de inscripción incompletos' });
+  }
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  // Encuentra el índice de la inscripción que coincide con usuario y curso
+  const index = db.inscripciones.findIndex(i => i.usuario.usuario === usuario.usuario && i.curso.nombreCurso === curso.nombreCurso);
+
+  if (index !== -1) {
+    db.inscripciones.splice(index, 1);
+    fs.writeFileSync(dbPath, JSON.stringify(db, null, 2), 'utf-8');
+    res.status(200).json({ message: 'Inscripción eliminada con éxito' });
+  } else {
+    res.status(404).json({ error: 'Inscripción no encontrada para el usuario en el curso especificado' });
+  }
+});
+
+
+// Endpoint para obtener alumnos
+app.get('/usuarios', (req, res) => {
+  const dbPath = path.join(__dirname, 'db.json');
+  let db;
+
+  try {
+    db = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+  } catch (err) {
+    return res.status(500).json({ error: 'Error al leer la base de datos' });
+  }
+
+  // Verifica si existe la sección 'alumnos' en tu db.json
+  if (db.alumnos) {
+    res.json(db.alumnos);
+  } else {
+    res.status(404).json({ error: 'No se encontraron alumnos' });
   }
 });

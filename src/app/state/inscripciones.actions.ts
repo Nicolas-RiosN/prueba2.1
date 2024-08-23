@@ -46,7 +46,7 @@ export const loadCursosFailure = createAction(
     '[Cursos] Load Cursos Failure',
     props<{ error: string }>()
   );
-// Acciones para Cursos
+
 export const loadCursos = createAction(
     '[Cursos] Load Cursos'
   );
@@ -57,7 +57,7 @@ export const loadCursos = createAction(
   );
   
   
-  // Acciones para Usuarios
+
   export const loadUsuarios = createAction(
     '[Usuarios] Load Usuarios'
   );

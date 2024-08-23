@@ -59,6 +59,11 @@
       "nombreCurso": "Algebra I",
       "cupos": 10,
       "fechaTermino": "2024-12-19T03:00:00.000Z"
+    },
+    {
+      "nombreCurso": "Calculo",
+      "cupos": 30,
+      "fechaTermino": "2024-09-08T04:00:00.000Z"
     }
   ],
   "inscripciones": [

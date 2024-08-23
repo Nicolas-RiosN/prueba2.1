@@ -42,10 +42,8 @@ export class InscripcionesService {
     let errorMessage = '';
 
     if (error.error instanceof ErrorEvent) {
-      // Client-side or network error occurred
       errorMessage = `An error occurred: ${error.error.message}`;
     } else {
-      // Backend returned an unsuccessful response code
       errorMessage = `Server returned code: ${error.status}, error message is: ${error.message}`;
     }
 
@@ -54,7 +52,6 @@ export class InscripcionesService {
   }
 
 
-// inscripciones.service.ts
 inscribir(usuario: Usuario, curso: Curso): Observable<any> {
   return this.http.post(`${this.apiUrl}/inscripciones`, { usuario, curso });
 }

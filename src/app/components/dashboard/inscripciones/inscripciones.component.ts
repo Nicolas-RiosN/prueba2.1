@@ -73,7 +73,6 @@ export class InscripcionesComponent implements OnInit {
     this.cursoSeleccionado = curso;
   }
 
-// inscripciones.component.ts
 inscribir(): void {
   if (this.usuarioSeleccionado && this.cursoSeleccionado) {
     this.store.dispatch(inscribir({ usuario: this.usuarioSeleccionado, curso: this.cursoSeleccionado }));
@@ -106,7 +105,7 @@ eliminarInscripcion(): void {
   openInscripcionesList(): void {
     this.dialog.open(InscripcionesListComponent, {
       width: '600px',
-      data: {} // Puedes pasar datos al componente del diálogo si es necesario
+      data: {}
     });
   }
 }

@@ -33,3 +33,7 @@ Usuario encontrados en db.json:
 nicolas y karla ambos contraseña 123
 
 se inicio con node node server.js el servidor de db
+
+comandos imporntantes:
+- node server.js
+- n s -o

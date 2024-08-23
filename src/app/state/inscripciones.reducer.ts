@@ -1,4 +1,3 @@
-// inscripciones.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { InscripcionesState } from './inscripciones.model';
 import { 
